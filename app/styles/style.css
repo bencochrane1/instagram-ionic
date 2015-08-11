@@ -1,0 +1,48 @@
+/* Empty. Add your own CSS if you like */
+
+.icon.ion-ios-more-outline {
+    position: relative;
+    left: 260px;
+}
+
+.card.ig-card {
+    margin: 0;
+}
+
+.bar-header {
+    background-color: #00447B !important;
+}
+
+.bar-header .title.title-center.header-item {
+    color: white !important;
+    font-family: 'Grand Hotel', cursive !important;
+    font-size: 28px;
+}
+
+ion-tabs .tab-nav.tabs {
+    background-color: #272822;
+}
+
+ion-tabs .tab-nav.tabs .tab-item .icon {
+    line-height: 50px;
+}
+
+
+
+.tab-item.tab-item-active {
+    background-color: #161713;
+}
+
+.ig-camera-tab.tab-item.tab-item-active, .ig-camera-tab.tab-item {
+    background-color: #00447B !important;
+    color: white !important;
+    opacity: 1 !important;
+}
+
+.tab-item {
+    color: #868484 !important;
+}
+
+.tab-item.tab-item-active i:before {
+    color: white;
+}

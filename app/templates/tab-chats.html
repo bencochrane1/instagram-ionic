@@ -1,0 +1,25 @@
+<ion-view view-title="Instagram">
+  <ion-content>
+
+    <div ng-repeat="chat in chats" class="list card ig-card">
+
+      <div ion-affix data-affix-within-parent-with-class="ig-card" class="item item-avatar">
+        <img src="{{ chat.face }}">
+        <h2>{{ chat.name }}</h2>
+        <p>Sydney</p>
+      </div>
+
+      <div class="item item-image">
+        <img src="{{ chat.face }}">
+      </div>
+
+      <a class="item item-icon-left" href="#">
+        <i class="icon ion-ios-heart-outline"></i>
+        <i class="icon ion-ios-more-outline"></i>
+        
+      </a>
+
+    </div>
+
+  </ion-content>
+</ion-view>
