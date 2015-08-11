@@ -1,6 +1,6 @@
 {
   "name": "ionic-mean",
-  "app_id": "",
+  "app_id": "30def159",
   "gulpStartupTasks": [
     "sass",
     "watch"

@@ -46,3 +46,7 @@ ion-tabs .tab-nav.tabs .tab-item .icon {
 .tab-item.tab-item-active i:before {
     color: white;
 }
+
+.tab-nav.tabs {
+    border: none !important;
+}
