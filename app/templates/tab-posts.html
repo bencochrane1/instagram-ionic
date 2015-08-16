@@ -1,0 +1,44 @@
+<ion-view view-title="Instagram">
+  <ion-content>
+
+    <div ng-repeat="post in posts" class="list card ig-card">
+
+      <div ion-affix data-affix-within-parent-with-class="ig-card" class="item item-avatar">
+        <img src="{{ post.image }}">
+        <h2>{{ post.author }}</h2>
+        <p>Sydney</p>
+      </div>
+
+      <div class="item item-image">
+        <img src="{{ post.image }}">
+      </div>
+
+      <div class="flex-row">
+
+        <div class="flex-row flex-grow ig-posts-icon-row">
+        
+          <div ng-click="likePost(post)">
+            <div><i ng-if="!post.liked" class="icon ion-ios-heart-outline"></i></div>
+            <div><i ng-if="post.liked" class="icon ion-ios-heart ig-heart-icon-full"></i></div>
+          </div>
+
+          <div class="ig-message-bubble"><i class="icon ion-ios-chatbubble-outline"></i></div>
+          <div class="flex-row flex-grow flex-justify-right"><i class="icon ion-ios-more-outline"></i></div>
+
+        </div>
+
+      </div>
+
+      <div  class="ig-number-likes">
+      <i class="icon ion-ios-heart"></i>
+      {{ post.likes }} likes
+      </div>
+
+      <div class="ig-author-comment">
+        <span class="ig-author-title">{{ post.author | lowercase }}</span> {{ post.message }}
+      </div>
+
+    </div>
+
+  </ion-content>
+</ion-view>

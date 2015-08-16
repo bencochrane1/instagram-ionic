@@ -1,48 +1,116 @@
 angular.module('starter.services', [])
 
-.service('Chats', function() {
+// .constant('API_ENDPOINT', 'https://instagram-api-endpoint.herokuapp.com/api')
+.constant('API_ENDPOINT', 'http://localhost:8080/api')
 
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'http://www.fillmurray.com/400/400'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'http://www.fillmurray.com/400/400'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'http://www.fillmurray.com/400/400'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'http://www.fillmurray.com/400/400'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'http://www.fillmurray.com/400/400'
-  }];
+.factory('auth', function($http, API_ENDPOINT, $window) {
 
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
-        }
-      }
-      return null;
+  var auth = {}
+
+  auth.saveToken = function(token) {
+    $window.localStorage['ionic-mean-token'] = token;
+  }
+
+  auth.getToken = function() {
+    return $window.localStorage['ionic-mean-token'];
+  }
+
+  auth.isLoggedIn = function() {
+    var token = auth.getToken();
+    if (token) {
+      var payload = JSON.parse($window.atob(token.split('.')[1]));
+      return payload.exp > Date.now() / 1000;
+    } else {
+      return false;
     }
-  };
+  }
+
+  auth.currentUser = function() {
+    if (auth.isLoggedIn()) {
+      var token = auth.getToken();
+      var payload = JSON.parse($window.atob(token.split('.')[1]));
+      return payload.username;
+    }
+  }
+
+  auth.register = function(user) {
+    var endpoint = API_ENDPOINT + '/register';
+    return $http.post(endpoint, user).success(function(data) {
+      auth.saveToken(data.token);
+    });
+  }
+
+  auth.logIn = function(user) {
+    var endpoint = API_ENDPOINT + '/login';
+    return $http.post(endpoint, user).success(function(data) {
+      auth.saveToken(data.token);
+    });
+  }
+
+  auth.logOut = function() {
+    $window.localStorage.removeItem['ionic-mean-token'];
+  }
+
+  return auth;
+
+})
+
+.service('Posts', function($q, $http, API_ENDPOINT) {
+
+  this.all = function() {
+    var deferred = $q.defer();
+    var endpoint = API_ENDPOINT + '/posts';
+
+    $http.get(endpoint)
+    .then(function(data) {
+      console.log('we got these posts: ', data.data);
+      deferred.resolve(data.data);
+    })
+    .catch(function(data) {
+      console.log('we didnt get no posts: ', data);
+      deferred.reject();
+    })
+
+    return deferred.promise;
+  }
+
+  this.like = function(post) {
+
+    var deferred = $q.defer();
+    var endpoint = API_ENDPOINT + '/posts/' + post._id + '/like';
+
+    var headerObject = {
+      Authorization: 'Bearer ' + auth.getToken() 
+    }
+
+    $http.put(endpoint, null, headerObject)
+    .then(function() {
+      console.log('you like it successfully');
+      deferred.resolve();
+    });
+  }
+
+  this.addNewPost = function(post) {
+    console.log('data into service addnewpost: ', post);
+    var deferred = $q.defer();
+    var endpoint = API_ENDPOINT + '/posts';
+
+    var params = {
+      method: 'POST',
+      url: endpoint,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Authorization': 'Bearer ' + auth.getToken() },
+      data: post
+    }
+
+    $http(params)
+    .then(function(data) {
+      console.log('you added this post: ', data);
+      deferred.resolve(data);
+    })
+    .catch(function(data) {
+      console.error(data);
+      deferred.reject();
+    })
+    return deferred.promise;
+  }
 });

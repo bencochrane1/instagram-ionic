@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','ion-affix', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'ngCordova', 'ion-affix', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -21,14 +21,46 @@ angular.module('starter', ['ionic','ion-affix', 'starter.controllers', 'starter.
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+// .run(function($httpBackend) {
+
+//   var posts = function() {
+//     return [200, [
+//       {
+//         author: "anna",
+//         image: "http://www.fillmurray.com/400/400",
+//         liked: false,
+//         likes: 56,
+//         location: "town",
+//         message: "at the town"      
+//       },
+//       {
+//         author: "mary",
+//         image: "http://www.fillmurray.com/400/400",
+//         liked: false,
+//         likes: 87,
+//         location: "out of town",
+//         message: "at the out of town"      
+//       }
+//     ], {}]
+//   }
+
+//   $httpBackend.whenGET('\/api/posts\/*').respond(posts);
+
+// })
+
+.config(function($stateProvider, $urlRouterProvider, $httpProvider, $compileProvider) {
+
+  // $httpProvider.defaults.useXDomain = true;
+  // delete $httpProvider.defaults.headers.common['X-Requested-With'];
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 
   $stateProvider
 
     .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/tabs.html',
+    controller: 'UploaderCtrl'
   })
 
   .state('tab.dash', {
@@ -41,31 +73,31 @@ angular.module('starter', ['ionic','ion-affix', 'starter.controllers', 'starter.
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.posts', {
+      url: '/posts',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'tab-posts': {
+          templateUrl: 'templates/tab-posts.html',
+          controller: 'PostsCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+    .state('tab.post-detail', {
+      url: '/posts/:postId',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'tab-posts': {
+          templateUrl: 'templates/post-detail.html',
+          controller: 'PostDetailCtrl'
         }
       }
     })
 
-  .state('tab.account', {
-    url: '/account',
+  .state('tab.login', {
+    url: '/login',
     views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+      'login-modal': {
+        templateUrl: 'templates/login-modal.html',
+        controller: 'AuthCtrl'
       }
     }
   });
